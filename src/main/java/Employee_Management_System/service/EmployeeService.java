@@ -1,5 +1,6 @@
 package Employee_Management_System.service;
-
+import Employee_Management_System.dto.EmployeeResponseDTO;
+import Employee_Management_System.dto.EmployeeRequestDTO;
 import Employee_Management_System.entity.Employee;
 import Employee_Management_System.repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
@@ -18,8 +19,26 @@ public class EmployeeService {
         return employeeRepository.findAll();
     }
 
-    public Employee createEmployee(Employee employee){
-        return employeeRepository.save(employee);
+    public EmployeeResponseDTO createEmployee(EmployeeRequestDTO request) {
+
+        Employee employee = new Employee();
+
+        employee.setFirstName(request.getFirstName());
+        employee.setLastName(request.getLastName());
+        employee.setEmail(request.getEmail());
+        employee.setDepartment(request.getDepartment());
+        employee.setSalary(request.getSalary());
+
+        Employee savedEmployee = employeeRepository.save(employee);
+
+        return new EmployeeResponseDTO(
+                savedEmployee.getId(),
+                savedEmployee.getFirstName(),
+                savedEmployee.getLastName(),
+                savedEmployee.getEmail(),
+                savedEmployee.getDepartment(),
+                savedEmployee.getSalary()
+        );
     }
 
     public Employee getEmployeeById(Long id){
