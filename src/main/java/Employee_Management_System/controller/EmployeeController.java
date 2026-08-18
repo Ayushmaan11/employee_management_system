@@ -5,6 +5,7 @@ import Employee_Management_System.dto.EmployeeResponseDTO;
 import Employee_Management_System.entity.Employee;
 import Employee_Management_System.service.EmployeeService;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class EmployeeController {
 
     @PostMapping
     public EmployeeResponseDTO createEmployee(
-            @RequestBody EmployeeRequestDTO request) {
+            @Valid @RequestBody EmployeeRequestDTO request) {
         return employeeService.createEmployee(request);
     }
 
@@ -37,7 +38,7 @@ public class EmployeeController {
     @PutMapping("/{id}")
     public EmployeeResponseDTO updateEmployee(
             @PathVariable("id") Long id,
-            @RequestBody EmployeeRequestDTO request) {
+            @Valid @RequestBody EmployeeRequestDTO request) {
         return employeeService.updateEmployee(id, request);
     }
 
