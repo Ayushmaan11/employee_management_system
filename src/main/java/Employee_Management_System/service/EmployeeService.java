@@ -15,8 +15,19 @@ public class EmployeeService {
         this.employeeRepository = employeeRepository;
     }
 
-    public List<Employee> getAllEmployees(){
-        return employeeRepository.findAll();
+    public List<EmployeeResponseDTO> getAllEmployees(){
+        List<Employee> employees = employeeRepository.findAll();
+
+        return employees.stream()
+                .map(employee -> new EmployeeResponseDTO(
+                        employee.getId(),
+                        employee.getFirstName(),
+                        employee.getLastName(),
+                        employee.getEmail(),
+                        employee.getDepartment(),
+                        employee.getSalary()
+                ))
+                .toList();
     }
 
     public EmployeeResponseDTO createEmployee(EmployeeRequestDTO request) {
@@ -41,23 +52,44 @@ public class EmployeeService {
         );
     }
 
-    public Employee getEmployeeById(Long id){
-        return employeeRepository.findById(id).orElseThrow(() -> new RuntimeException("Employee not found with id:" + id));
+    public EmployeeResponseDTO getEmployeeById(Long id){
+        Employee employee = employeeRepository.findById(id).orElseThrow(() -> new RuntimeException(
+                "Employee with id " + id + " not found!"
+        ));
+
+        return new EmployeeResponseDTO(
+                employee.getId(),
+                employee.getFirstName(),
+                employee.getLastName(),
+                employee.getEmail(),
+                employee.getDepartment(),
+                employee.getSalary()
+        );
     }
 
-    public Employee updateEmployee(Long id, Employee updatedEmployee){
+    public EmployeeResponseDTO updateEmployee(Long id, EmployeeRequestDTO request) {
 
         Employee existingEmployee = employeeRepository.findById(id).orElseThrow(() -> new RuntimeException(
                 "Employee not found with id:" + id
         ));
 
-        existingEmployee.setFirstName(updatedEmployee.getFirstName());
-        existingEmployee.setLastName(updatedEmployee.getLastName());
-        existingEmployee.setEmail(updatedEmployee.getEmail());
-        existingEmployee.setDepartment(updatedEmployee.getDepartment());
-        existingEmployee.setSalary(updatedEmployee.getSalary());
+        existingEmployee.setFirstName(request.getFirstName());
+        existingEmployee.setLastName(request.getLastName());
+        existingEmployee.setEmail(request.getEmail());
+        existingEmployee.setDepartment(request.getDepartment());
+        existingEmployee.setSalary(request.getSalary());
 
-        return employeeRepository.save(existingEmployee);
+        Employee updatedEmployee = employeeRepository.save(existingEmployee);
+
+        return new EmployeeResponseDTO(
+                updatedEmployee.getId(),
+                updatedEmployee.getFirstName(),
+                updatedEmployee.getLastName(),
+                updatedEmployee.getEmail(),
+                updatedEmployee.getDepartment(),
+                updatedEmployee.getSalary()
+        );
+
     }
 
     public void deleteEmployee(Long id){
