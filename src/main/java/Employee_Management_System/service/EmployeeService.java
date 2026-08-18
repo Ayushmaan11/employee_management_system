@@ -2,8 +2,10 @@ package Employee_Management_System.service;
 import Employee_Management_System.dto.EmployeeResponseDTO;
 import Employee_Management_System.dto.EmployeeRequestDTO;
 import Employee_Management_System.entity.Employee;
+import Employee_Management_System.exception.ResourceNotFoundException;
 import Employee_Management_System.repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
+
 
 import java.util.List;
 
@@ -53,7 +55,7 @@ public class EmployeeService {
     }
 
     public EmployeeResponseDTO getEmployeeById(Long id){
-        Employee employee = employeeRepository.findById(id).orElseThrow(() -> new RuntimeException(
+        Employee employee = employeeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(
                 "Employee with id " + id + " not found!"
         ));
 
@@ -69,7 +71,7 @@ public class EmployeeService {
 
     public EmployeeResponseDTO updateEmployee(Long id, EmployeeRequestDTO request) {
 
-        Employee existingEmployee = employeeRepository.findById(id).orElseThrow(() -> new RuntimeException(
+        Employee existingEmployee = employeeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(
                 "Employee not found with id:" + id
         ));
 
@@ -94,7 +96,7 @@ public class EmployeeService {
 
     public void deleteEmployee(Long id){
 
-        Employee employee = employeeRepository.findById(id).orElseThrow(() -> new RuntimeException(
+        Employee employee = employeeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(
                 "Employee not found with id:" + id
         ));
         employeeRepository.delete(employee);
