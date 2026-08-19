@@ -5,6 +5,8 @@ import Employee_Management_System.entity.Employee;
 import Employee_Management_System.exception.ResourceNotFoundException;
 import Employee_Management_System.repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 
 import java.util.List;
@@ -17,19 +19,20 @@ public class EmployeeService {
         this.employeeRepository = employeeRepository;
     }
 
-    public List<EmployeeResponseDTO> getAllEmployees(){
-        List<Employee> employees = employeeRepository.findAll();
+    public Page<EmployeeResponseDTO> getAllEmployees(Pageable pageable) {
+        Page<Employee> employees = employeeRepository.findAll(pageable);
 
-        return employees.stream()
-                .map(employee -> new EmployeeResponseDTO(
+        return employees.map
+                (employee ->
+                        new EmployeeResponseDTO(
                         employee.getId(),
                         employee.getFirstName(),
                         employee.getLastName(),
                         employee.getEmail(),
                         employee.getDepartment(),
                         employee.getSalary()
-                ))
-                .toList();
+                ));
+
     }
 
     public EmployeeResponseDTO createEmployee(EmployeeRequestDTO request) {

@@ -4,6 +4,8 @@ import Employee_Management_System.dto.EmployeeRequestDTO;
 import Employee_Management_System.dto.EmployeeResponseDTO;
 import Employee_Management_System.entity.Employee;
 import Employee_Management_System.service.EmployeeService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -22,9 +24,9 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public ResponseEntity<List<EmployeeResponseDTO>> getAllEmployees() {
+    public ResponseEntity<Page<EmployeeResponseDTO>> getAllEmployees(Pageable pageable) {
         return
-                ResponseEntity.ok(employeeService.getAllEmployees());
+                ResponseEntity.ok(employeeService.getAllEmployees(pageable));
     }
 
     @PostMapping
