@@ -97,6 +97,22 @@ public class EmployeeService {
 
     }
 
+    public List<EmployeeResponseDTO> getEmployeesByDepartment(String department){
+        List<Employee> employees = employeeRepository.findByDepartment(department);
+
+        return employees.stream()
+                .map(employee -> new EmployeeResponseDTO(
+                        employee.getId(),
+                        employee.getFirstName(),
+                        employee.getLastName(),
+                        employee.getEmail(),
+                        employee.getDepartment(),
+                        employee.getSalary()
+                )).toList();
+
+
+    }
+
     public void deleteEmployee(Long id){
 
         Employee employee = employeeRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(

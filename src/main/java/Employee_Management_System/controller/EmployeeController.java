@@ -23,6 +23,13 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<EmployeeResponseDTO>> findByDepartment(@RequestParam("department") String department) {
+        return ResponseEntity.ok(
+                employeeService.getEmployeesByDepartment(department)
+        );
+    }
     @GetMapping
     public ResponseEntity<Page<EmployeeResponseDTO>> getAllEmployees(Pageable pageable) {
         return
