@@ -4,6 +4,7 @@ import Employee_Management_System.dto.EmployeeRequestDTO;
 import Employee_Management_System.entity.Employee;
 import Employee_Management_System.exception.ResourceNotFoundException;
 import Employee_Management_System.repository.EmployeeRepository;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -97,20 +98,33 @@ public class EmployeeService {
 
     }
 
-    public List<EmployeeResponseDTO> getEmployeesByDepartment(String department){
-        List<Employee> employees = employeeRepository.findByDepartment(department);
+    public Page<EmployeeResponseDTO> getEmployees(
+            String department,
+            Pageable pageable) {
 
-        return employees.stream()
-                .map(employee -> new EmployeeResponseDTO(
+        Page<Employee> employees;
+
+        if (department != null && !department.isBlank()) {
+
+            employees = employeeRepository
+                    .findByDepartment(department, pageable);
+
+        } else {
+
+            employees = employeeRepository
+                    .findAll(pageable);
+        }
+
+        return employees.map(employee ->
+                new EmployeeResponseDTO(
                         employee.getId(),
                         employee.getFirstName(),
                         employee.getLastName(),
                         employee.getEmail(),
                         employee.getDepartment(),
                         employee.getSalary()
-                )).toList();
-
-
+                )
+        );
     }
 
     public void deleteEmployee(Long id){

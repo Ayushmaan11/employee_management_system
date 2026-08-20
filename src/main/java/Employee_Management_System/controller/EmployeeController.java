@@ -23,17 +23,18 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
-
-    @GetMapping("/filter")
-    public ResponseEntity<List<EmployeeResponseDTO>> findByDepartment(@RequestParam("department") String department) {
-        return ResponseEntity.ok(
-                employeeService.getEmployeesByDepartment(department)
-        );
-    }
+    
     @GetMapping
-    public ResponseEntity<Page<EmployeeResponseDTO>> getAllEmployees(Pageable pageable) {
-        return
-                ResponseEntity.ok(employeeService.getAllEmployees(pageable));
+    public ResponseEntity<Page<EmployeeResponseDTO>> getEmployees(
+            @RequestParam(required = false) String department,
+            Pageable pageable) {
+
+        return ResponseEntity.ok(
+                employeeService.getEmployees(
+                        department,
+                        pageable
+                )
+        );
     }
 
     @PostMapping
